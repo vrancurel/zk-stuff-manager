@@ -67,11 +67,11 @@ client.once('connected', () => {
                       zookeeper.Exception.NODE_EXISTS) ? err : null, path);
         });
     },
-    ], (err, path) => {
+    ], err => {
         if (err) {
-            console.log(`error creating ${path}: ${err}`);
+            // console.log(`error creating ${path}: ${err}`);
         } else {
-            console.log(`created: ${path}`);
+            // console.log(`created: ${path}`);
         }
         client.close();
     });
