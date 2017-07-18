@@ -1,2 +1,3 @@
-# zk_np
-NodeJS Zookeeper Stuff Provisioner
+# zk-stuff-manager
+NodeJS Zookeeper Stuff Manager
+

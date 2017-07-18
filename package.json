@@ -1,17 +1,17 @@
 {
-  "name": "zookeeper-stuff-provisioner",
+  "name": "zk-stuff-manager",
   "engines": {
     "node": "6.9.5"
   },
   "version": "0.0.1",
-  "description": "Zookeeper Stuff Provisioner",
+  "description": "Ensure that stuff is properly owned (and managed) by somebody",
   "main": "index.js",
   "scripts": {
     "ft_test": "mocha tests/functional",
     "lint": "eslint $(git ls-files '*.js')",
     "test": "mocha tests/unit"
   },
-  "repository": "vrancurel/zk_sp",
+  "repository": "vrancurel/zk-stuff-manager",
   "keywords": [
     "zk",
     "monitoring"
@@ -19,9 +19,9 @@
   "author": "Vianney Rancurel",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/zk_sp/issues"
+    "url": "https://github.com/zk-stuff-manager/issues"
   },
-  "homepage": "https://github.com/zk_sp#readme",
+  "homepage": "https://github.com/zk-stuff-manager#readme",
   "devDependencies": {
     "mocha": "",
     "eslint": "^2.4.0",

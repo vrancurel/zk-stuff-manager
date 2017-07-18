@@ -1,7 +1,7 @@
 module.exports = {
     NAMESPACE: '/monitor',
-    ELECTION: '/election',
-    MEMBER: '/member',
-    SERVERS: '/servers',
-    STUFF: '/stuff'
-}
+    LEADERS: '/leaders',
+    LEADER: '/leader',
+    OWNERS: '/owners',
+    STUFFS: '/stuffs',
+};

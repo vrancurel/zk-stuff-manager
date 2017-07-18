@@ -1,92 +1,78 @@
-var zookeeper = require('node-zookeeper-client');
-var async = require('async');
-var constants = require('./constants.js');
+const zookeeper = require('node-zookeeper-client');
+const async = require('async');
+const c = require('./constants.js');
 
-var client = zookeeper.createClient('localhost:2181');
+const client = zookeeper.createClient('localhost:2181');
 
-client.once('connected', function () {
-    console.log('Connected to the server.');
-
-    console.log(constants.NAMESPACE);
-    async.series([
-	(callback) => {
-	    client.create(constants.NAMESPACE,
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.ELECTION,
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.SERVERS,
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.STUFF,
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.STUFF + '/0',
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.STUFF + '/1',
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.STUFF + '/2',
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.STUFF + '/3',
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.STUFF + '/4',
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.STUFF + '/5',
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.STUFF + '/6',
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
-	(callback) => {
-	    client.create(constants.NAMESPACE + constants.STUFF + '/7',
-			  (err, path) => {
-			      callback((err && err.getCode() != zookeeper.Exception.NODE_EXISTS) ? err : null, path);
-			  });
-	},
+client.once('connected', () => {
+    // console.log('Connected to the ZK server.');
+    async.series([callback => {
+        client.create(c.NAMESPACE, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(c.NAMESPACE + c.LEADERS, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(c.NAMESPACE + c.OWNERS, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(c.NAMESPACE + c.STUFFS, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(`${c.NAMESPACE}${c.STUFFS}/0`, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(`${c.NAMESPACE}${c.STUFFS}/1`, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(`${c.NAMESPACE}${c.STUFFS}/2`, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(`${c.NAMESPACE}${c.STUFFS}/3`, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(`${c.NAMESPACE}${c.STUFFS}/4`, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(`${c.NAMESPACE}${c.STUFFS}/5`, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(`${c.NAMESPACE}${c.STUFFS}/6`, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    }, callback => {
+        client.create(`${c.NAMESPACE}${c.STUFFS}/7`, (err, path) => {
+            callback((err && err.getCode() !==
+                      zookeeper.Exception.NODE_EXISTS) ? err : null, path);
+        });
+    },
     ], (err, path) => {
-	if (err) {
-	    console.log('error creating ' + path + ': ' + err);
-	} else {
-	    console.log('created: ' + path);
-	}
+        if (err) {
+            console.log(`error creating ${path}: ${err}`);
+        } else {
+            console.log(`created: ${path}`);
+        }
         client.close();
     });
 });
