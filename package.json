@@ -1,0 +1,36 @@
+{
+  "name": "zookeeper-stuff-provisioner",
+  "engines": {
+    "node": "6.9.5"
+  },
+  "version": "0.0.1",
+  "description": "Zookeeper Stuff Provisioner",
+  "main": "index.js",
+  "scripts": {
+    "ft_test": "mocha tests/functional",
+    "lint": "eslint $(git ls-files '*.js')",
+    "test": "mocha tests/unit"
+  },
+  "repository": "vrancurel/zk_sp",
+  "keywords": [
+    "zk",
+    "monitoring"
+  ],
+  "author": "Vianney Rancurel",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/zk_sp/issues"
+  },
+  "homepage": "https://github.com/zk_sp#readme",
+  "devDependencies": {
+    "mocha": "",
+    "eslint": "^2.4.0",
+    "eslint-config-airbnb": "^6.0.0",
+    "eslint-config-scality": "scality/Guidelines",
+    "eslint-plugin-react": "4.2.3"
+  },
+  "dependencies": {
+    "node-zookeeper-client": "~0.2.2",
+    "async": "~1.4.2"
+  }
+}
