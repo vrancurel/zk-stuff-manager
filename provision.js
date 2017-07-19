@@ -2,10 +2,14 @@ const zookeeper = require('node-zookeeper-client');
 const async = require('async');
 const c = require('./constants.js');
 
+function message(msg) {
+    console.log(msg);
+}
+
 const client = zookeeper.createClient('localhost:2181');
 
 client.once('connected', () => {
-    // console.log('Connected to the ZK server.');
+    message('Connected to the ZK server.');
     async.series([callback => {
         client.create(c.NAMESPACE, (err, path) => {
             callback((err && err.getCode() !==
@@ -67,11 +71,11 @@ client.once('connected', () => {
                       zookeeper.Exception.NODE_EXISTS) ? err : null, path);
         });
     },
-    ], err => {
+    ], (err, path) => {
         if (err) {
-            // console.log(`error creating ${path}: ${err}`);
+            message(`error creating ${path}: ${err}`);
         } else {
-            // console.log(`created: ${path}`);
+            message(`created: ${path}`);
         }
         client.close();
     });

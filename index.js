@@ -9,38 +9,62 @@ let isLeader = false;
 let owners = null;
 let stuffs = null;
 
+function message(msg) {
+    console.log(msg);
+}
+
 function randomValueHex(len) {
     return crypto.randomBytes(Math.ceil(len / 2))
         .toString('hex') // convert to hexadecimal format
         .slice(0, len);   // return required number of characters
 }
 
-function stuffReassign() {
-    // console.log('stuff reassign');
+function stuffReassign(client) {
+    message('stuff reassign');
     let ownerIdx = 0;
     let stuff;
+    const ownersMap = {};
     if (owners === null || stuffs === null ||
         owners.length === 0 || stuffs.length === 0) {
         return;
     }
+    // assign stuff to owners
     for (stuff in stuffs) {
         if (stuffs.hasOwnProperty(stuff)) {
-            // console.log(ownerIdx + ' ' + stuff);
+            // message(ownerIdx + ' ' + stuff);
+            const key = owners[ownerIdx];
+            ownersMap[key] = ownersMap[key] || [];
+            ownersMap[key].push(stuff);
             ownerIdx++;
             if (ownerIdx === owners.length) {
                 ownerIdx = 0;
             }
         }
     }
+    // now write data in owners
+    Object.keys(ownersMap).forEach(owner => {
+        message(`owner ${owner} ${ownersMap[owner]}`);
+        const path = `${constants.NAMESPACE}${constants.OWNERS}/${owner}`;
+        client.setData(path,
+                       new Buffer(JSON.stringify(ownersMap[owner])),
+                       -1, // version
+                       err => {
+                           if (err) {
+                               message(`cannot setData to ${path}`);
+                           }
+                       });
+    });
 }
 
 function leaderCheck(children) {
     let i;
     for (i in children) {
-        // console.log(children[i]);
-        if (children[i] < myLeaderName) {
-            // console.log('found smaller');
-            return false;
+        if (children.hasOwnProperty(i)) {
+            message(children[i]);
+            if (children[i] < myLeaderName) {
+                // message('found smaller');
+                return false;
+            }
         }
     }
     return true;
@@ -49,20 +73,20 @@ function leaderCheck(children) {
 function leaderManage(client) {
     // monitor leader change
     client.getChildren(constants.NAMESPACE + constants.LEADERS,
-                       () => {
-                           // console.log('Got leader event: %s', event);
+                       event => {
+                           message('Got leader event: %s', event);
                            leaderManage(client);
                        },
                        (err, children) => {
                            if (err) {
-                               // console.log('list failed: ' + err);
+                               message(`list failed: ${err}`);
                                return;
                            }
-                           // console.log('Leaders are: %j.', children);
+                           message(`Leaders are: ${children}`);
                            isLeader = leaderCheck(children);
-                           // console.log('leader: ' + isLeader);
+                           message(`leader: ${isLeader}`);
                            if (isLeader) {
-                               stuffReassign();
+                               stuffReassign(client);
                            }
                        }
                       );
@@ -79,7 +103,7 @@ function leaderRegister(client, callback) {
                           callback(err);
                       } else {
                           myLeaderName = path.basename(_path);
-                          // console.log('created: ' + myLeaderName);
+                          message(`created: ${myLeaderName}`);
                           callback(null);
                       }
                   });
@@ -88,37 +112,42 @@ function leaderRegister(client, callback) {
 function ownerManage(client) {
     // monitor owner change
     client.getChildren(constants.NAMESPACE + constants.OWNERS,
-                       () => {
-                           // console.log('Got owner event: %s', event);
+                       event => {
+                           message(`Got owner event: ${event}`);
                            ownerManage(client);
                        },
                        (err, children) => {
                            if (err) {
-                               // console.log('list failed: ' + err);
+                               message(`list failed: ${err}`);
                                return;
                            }
                            owners = children;
-                           // console.log('Owners are: %j.', owners);
+                           message(`Owners are: ${owners}`);
                            if (isLeader) {
-                               stuffReassign();
+                               stuffReassign(client);
                            }
                        }
                       );
 }
 
-function ownerManageMyself(client, myPath) {
+function ownerManageMyself(client, myPath, callback) {
     // monitor change in my content
     client.getData(myPath,
-                   () => {
-                       // console.log('Got owner event: %s', event);
-                       ownerManageMyself(client, myPath);
+                   event => {
+                       message(`Got owner self event: ${event}`);
+                       ownerManageMyself(client, myPath, callback);
                    },
-                   err => {
+                   (err, data) => {
                        if (err) {
-                           // console.log('get failed: ' + err);
+                           message(`get failed: ${err}`);
                            return;
                        }
-                       // console.log('Data is: %j.', data);
+                       // message('Data is: %j.', data);
+                       if (data !== undefined) {
+                           const results = JSON.parse(data);
+                           // message(results);
+                           callback(null, results);
+                       }
                    }
                   );
 }
@@ -135,7 +164,7 @@ function ownerRegister(client, callback) {
                       if (err) {
                           callback(err);
                       } else {
-                          // console.log('created: ' + _path);
+                          message(`created: ${_path}`);
                           callback(null, _path);
                       }
                   });
@@ -144,19 +173,19 @@ function ownerRegister(client, callback) {
 function stuffManage(client) {
     // monitor stuff change
     client.getChildren(constants.NAMESPACE + constants.STUFFS,
-                       () => {
-                           // console.log('Got stuff event: %s', event);
+                       event => {
+                           message(`Got stuff event: ${event}`);
                            stuffManage(client);
                        },
                        (err, children) => {
                            if (err) {
-                               // console.log('list failed: ' + err);
+                               message(`list failed: ${err}`);
                                return;
                            }
                            stuffs = children;
-                           // console.log('Stuffs are: %j.', stuffs);
+                           message(`Stuffs are: ${stuffs}`);
                            if (isLeader) {
-                               stuffReassign();
+                               stuffReassign(client);
                            }
                        }
                       );
@@ -164,7 +193,7 @@ function stuffManage(client) {
 
 function zkStuffManage(callback) {
     client.once('connected', () => {
-        // console.log('Connected to the ZK server.');
+        message('Connected to the ZK server.');
         leaderRegister(client, err => {
             if (err) {
                 callback(err);
@@ -177,7 +206,7 @@ function zkStuffManage(callback) {
                 callback(err);
             } else {
                 ownerManage(client);
-                ownerManageMyself(client, myPath);
+                ownerManageMyself(client, myPath, callback);
             }
         });
         stuffManage(client);
@@ -185,10 +214,10 @@ function zkStuffManage(callback) {
     client.connect();
 }
 
-zkStuffManage(err => {
+zkStuffManage((err, children) => {
     if (err) {
-        // console.log('error: ' + err);
+        message(`error: ${err}`);
     } else {
-        // console.log('now I manage: ' + children);
+        message(`now I manage: ${children}`);
     }
 });
