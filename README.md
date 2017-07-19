@@ -25,16 +25,34 @@ Every server shall have a /var/zookeeper/myid file numbered from 1 to 3
 
 To start the server:
 
+```
 $ cd zookeeper-release/bin
 $ ./zkServer start
+```
 
 To check the status of the nodes:
 
+```
 $ ./zkServer.sh status
+```
 
 To navigate in the ZK namespace:
 
+```
 $ ./zkcli.sh
 zkcli> ls /
 zkcli> ls /monitor
 zkcli> ls /monitor/owners
+```
+
+To use the lib, just do:
+
+``` 
+zkStuffManage((err, children) => {
+    if (err) {
+        message(`error: ${err}`);
+    } else {
+        message(`now I manage: ${children}`);
+    }
+});
+```
