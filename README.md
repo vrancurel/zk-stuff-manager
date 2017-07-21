@@ -54,8 +54,12 @@ To navigate in the ZK namespace:
 $ ./zkcli.sh
 zkcli> ls /
 zkcli> ls /monitor
+zkcli> ls /monitor/stuff
+0 1 2 3 4 5 6 7
 zkcli> ls /monitor/owners
 ```
+
+Here we have 8 "stuffs" (numbers)
 
 To use the lib, just do:
 
@@ -68,3 +72,6 @@ zkStuffManage((err, children) => {
     }
 });
 ```
+
+Owners (servers) can arrive at any time or leave at any time, the leader will always ensure
+there is an owner for each stuff.
