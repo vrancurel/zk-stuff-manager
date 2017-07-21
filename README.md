@@ -42,6 +42,12 @@ To check the status of the nodes:
 $ ./zkServer.sh status
 ```
 
+First, provision the namespace and the stuff:
+
+```
+$ node provision.js
+```
+
 To navigate in the ZK namespace:
 
 ```
