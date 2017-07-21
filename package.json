@@ -1,5 +1,5 @@
 {
-  "name": "zk-stuff-manager",
+  "name": "zookeeper-stuff-manager",
   "engines": {
     "node": "6.9.5"
   },
@@ -11,7 +11,7 @@
     "lint": "eslint $(git ls-files '*.js')",
     "test": "mocha tests/unit"
   },
-  "repository": "vrancurel/zk-stuff-manager",
+  "repository": "vrancurel/zookeeper-stuff-manager",
   "keywords": [
     "zk",
     "monitoring"
@@ -19,9 +19,9 @@
   "author": "Vianney Rancurel",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/zk-stuff-manager/issues"
+    "url": "https://github.com/zookeeper-stuff-manager/issues"
   },
-  "homepage": "https://github.com/zk-stuff-manager#readme",
+  "homepage": "https://github.com/zookeeper-stuff-manager#readme",
   "devDependencies": {
     "mocha": "",
     "eslint": "^2.4.0",
