@@ -1,7 +1,13 @@
 # zk-stuff-manager
 
 NodeJS Zookeeper Stuff Manager: This program ensures that you will
-always have an owner for a list of stuff.
+always have an owner (server) for a list of stuff (can be numbers, strings
+or whatever). The module will first
+elect a leader, then the leader will ensure that the stuff is
+evenly distributed among the different owners (servers). If an
+owner happens to die, then the leader will re-assign the stuff
+to others. If the leader dies, another owner will be elected
+as a leader.
 
 Quick Start w/ 3 nodes:
 -----------------------
