@@ -1,4 +1,4 @@
-# zk-stuff-manager
+# zookeeper-stuff-manager
 
 This module ensures that you will
 always have an owner (server) for a list of stuff (can be numbers, strings
